@@ -221,7 +221,7 @@
             const password = document.getElementById('loginPassword').value;
             
             try {
-                const response = await fetch('http://localhost:5000/login', {
+                const response = await fetch('/login', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -230,7 +230,7 @@
                     body: JSON.stringify({ username, password })
                 }).catch(error => {
                     console.error('Network error:', error);
-                    throw new Error('Unable to connect to the server. Please make sure the server is running at http://localhost:5000');
+                    throw new Error('Unable to connect to the server. Please try again.');
                 });
 
                 const data = await response.json();
@@ -264,7 +264,7 @@
             const password = document.getElementById('registerPassword').value;
             
             try {
-                const response = await fetch('http://localhost:5000/register', {
+                const response = await fetch('/register', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -273,7 +273,7 @@
                     body: JSON.stringify({ username, email, password })
                 }).catch(error => {
                     console.error('Network error:', error);
-                    throw new Error('Unable to connect to the server. Please make sure the server is running at http://localhost:5000');
+                    throw new Error('Unable to connect to the server. Please try again.');
                 });
 
                 const data = await response.json();
@@ -379,7 +379,7 @@
                 formData.append('before', beforeFile);
                 formData.append('after', afterFile);
 
-                const response = await fetchWithAuth('http://127.0.0.1:5000/process', {
+                const response = await fetchWithAuth('/process', {
                 method: 'POST',
                 body: formData
             });
@@ -415,7 +415,7 @@
         // Load history
         async function loadHistory() {
             try {
-                const response = await fetchWithAuth('http://127.0.0.1:5000/history');
+                const response = await fetchWithAuth('/history');
                 if (!response.ok) throw new Error('Failed to load history');
                 
                 const history = await response.json();
