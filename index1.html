@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hand Germs Detection</title>
+    <link rel="stylesheet" href="styles.css"> 
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="theme-toggle">
+        <button id="themeToggle" class="theme-btn">
+            <i class="fas fa-sun"></i>
+            <i class="fas fa-moon"></i>
+        </button>
+    </div>
+
+    <div class="auth-container" id="authContainer">
+        <div class="auth-box animate-fade-in">
+            <div class="auth-tabs">
+                <button class="auth-tab active" data-tab="login">Login</button>
+                <button class="auth-tab" data-tab="register">Register</button>
+            </div>
+
+            <form id="loginForm" class="auth-form">
+                <h2>Login</h2>
+                <div class="form-group">
+                    <label for="loginUsername">Username</label>
+                    <input type="text" id="loginUsername" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <button type="submit" class="auth-btn">Login</button>
+            </form>
+
+            <form id="registerForm" class="auth-form" style="display: none;">
+                <h2>Register</h2>
+                <div class="form-group">
+                    <label for="registerUsername">Username</label>
+                    <input type="text" id="registerUsername" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerEmail">Email</label>
+                    <input type="email" id="registerEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword">Password</label>
+                    <input type="password" id="registerPassword" required>
+                </div>
+                <button type="submit" class="auth-btn">Register</button>
+        </form>
+        </div>
+    </div>
+
+    <div class="container" id="mainContainer" style="display: none;">
+        <header class="animate-fade-in">
+            <div class="user-info">
+                <span id="userGreeting">Welcome, <span id="username"></span>!</span>
+                <button id="logoutBtn" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+            <h1>Hand Germs Detection</h1>
+            <p class="subtitle">Upload images to analyze hand cleanliness</p>
+        </header>
+
+        <div class="main-content">
+            <div class="form-container animate-slide-up">
+                <form id="uploadForm">
+                    <div class="upload-group">
+                        <label for="before">Initial Image:</label>
+                        <div class="file-input-wrapper">
+                            <input type="file" id="before" name="before" accept="image/*" required>
+                            <div class="file-input-label">
+                                <i class="fas fa-upload"></i>
+                                <span>Choose File</span>
+                            </div>
+                        </div>
+                        <div id="beforePreview" class="image-preview"></div>
+                    </div>
+
+                    <div class="upload-group">
+                        <label for="after">Post-Cleaning Image:</label>
+                        <div class="file-input-wrapper">
+                            <input type="file" id="after" name="after" accept="image/*" required>
+                            <div class="file-input-label">
+                                <i class="fas fa-upload"></i>
+                                <span>Choose File</span>
+                            </div>
+                        </div>
+                        <div id="afterPreview" class="image-preview"></div>
+                    </div>
+
+                    <button type="submit" class="process-btn">
+                        <span class="btn-text">Process Images</span>
+                        <div class="loader" style="display: none;"></div>
+                    </button>
+                </form>
+            </div>
+
+            <div class="results-section animate-fade-in" style="display: none;">
+        <h2>Results</h2>
+                <div class="score-container">
+                    <div class="score-circle">
+                        <span id="score" class="score">N/A</span>
+                        <span class="score-label">Cleanliness Score</span>
+                    </div>
+                </div>
+
+        <div class="image-container">
+                    <div class="image-box animate-slide-left">
+                <h3>Before Cleaning</h3>
+                <img id="beforeVis" alt="Before Visualization">
+            </div>
+                    <div class="image-box animate-slide-right">
+                <h3>After Cleaning</h3>
+                <img id="afterVis" alt="After Visualization">
+                    </div>
+                </div>
+            </div>
+
+            <div class="history-section animate-fade-in">
+                <h2>Recent Results</h2>
+                <div id="historyList" class="history-list"></div>
+            </div>
+
+            <div class="education-section animate-fade-in">
+                <h2>Learn About Germs & Cleanliness</h2>
+                <div class="education-grid">
+                    <div class="education-card animate-slide-up">
+                        <div class="card-icon">
+                            <i class="fas fa-bacteria"></i>
+                        </div>
+                        <h3>What are Germs?</h3>
+                        <p>Germs are microscopic organisms that can cause disease. They include bacteria, viruses, fungi, and protozoa. While some germs are harmless, others can make you sick.</p>
+                        <button class="learn-more-btn" data-topic="germs">Learn More</button>
+                    </div>
+
+                    <div class="education-card animate-slide-up">
+                        <div class="card-icon">
+                            <i class="fas fa-hands-wash"></i>
+                        </div>
+                        <h3>Proper Hand Washing</h3>
+                        <p>Wash your hands for at least 20 seconds with soap and water. Make sure to clean between fingers, under nails, and the backs of your hands.</p>
+                        <button class="learn-more-btn" data-topic="washing">Learn More</button>
+                    </div>
+
+                    <div class="education-card animate-slide-up">
+                        <div class="card-icon">
+                            <i class="fas fa-shield-virus"></i>
+                        </div>
+                        <h3>Prevention Tips</h3>
+                        <p>Regular hand washing, using hand sanitizer, and avoiding touching your face can help prevent the spread of germs.</p>
+                        <button class="learn-more-btn" data-topic="prevention">Learn More</button>
+                    </div>
+                </div>
+
+                <div id="educationModal" class="modal">
+                    <div class="modal-content">
+                        <span class="close-modal">&times;</span>
+                        <div id="modalContent"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Authentication state
+        let currentUser = null;
+        let authToken = null;
+
+        // Check for existing session
+        function checkSession() {
+            const token = localStorage.getItem('authToken');
+            const user = localStorage.getItem('user');
+            if (token && user) {
+                authToken = token;
+                currentUser = JSON.parse(user);
+                showMainContent();
+            } else {
+                showAuthContent();
+            }
+        }
+
+        // Show/hide content based on auth state
+        function showMainContent() {
+            document.getElementById('authContainer').style.display = 'none';
+            document.getElementById('mainContainer').style.display = 'block';
+            document.getElementById('username').textContent = currentUser.username;
+            loadHistory(); // Load user's history
+        }
+
+        function showAuthContent() {
+            document.getElementById('authContainer').style.display = 'flex';
+            document.getElementById('mainContainer').style.display = 'none';
+        }
+
+        // Auth tab switching
+        document.querySelectorAll('.auth-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                const formId = tab.dataset.tab + 'Form';
+                document.querySelectorAll('.auth-form').forEach(form => {
+                    form.style.display = 'none';
+                });
+                document.getElementById(formId).style.display = 'block';
+            });
+        });
+
+        // Login form submission
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            try {
+                const response = await fetch('http://localhost:5000/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password })
+                }).catch(error => {
+                    console.error('Network error:', error);
+                    throw new Error('Unable to connect to the server. Please make sure the server is running at http://localhost:5000');
+                });
+
+                const data = await response.json();
+                console.log('Login response:', data); // Debug log
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Login failed');
+                }
+
+                // Save auth data
+                authToken = data.token;
+                currentUser = data.user;
+                localStorage.setItem('authToken', authToken);
+                localStorage.setItem('user', JSON.stringify(currentUser));
+
+                showMainContent();
+                showSuccess('Login successful!');
+
+            } catch (error) {
+                console.error('Login error:', error); // Debug log
+                showError(error.message || 'An error occurred during login. Please try again.');
+            }
+        });
+
+        // Register form submission
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('registerUsername').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            
+            try {
+                const response = await fetch('http://localhost:5000/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ username, email, password })
+                }).catch(error => {
+                    console.error('Network error:', error);
+                    throw new Error('Unable to connect to the server. Please make sure the server is running at http://localhost:5000');
+                });
+
+                const data = await response.json();
+                console.log('Register response:', data); // Debug log
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Registration failed');
+                }
+
+                // Save auth data
+                authToken = data.token;
+                currentUser = data.user;
+                localStorage.setItem('authToken', authToken);
+                localStorage.setItem('user', JSON.stringify(currentUser));
+
+                showMainContent();
+                showSuccess('Registration successful!');
+
+            } catch (error) {
+                console.error('Register error:', error); // Debug log
+                showError(error.message || 'An error occurred during registration. Please try again.');
+            }
+        });
+
+        // Logout functionality
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            authToken = null;
+            currentUser = null;
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('user');
+            showAuthContent();
+            showSuccess('Logged out successfully');
+        });
+
+        // Update fetch calls to include auth token
+        async function fetchWithAuth(url, options = {}) {
+            if (!authToken) {
+                throw new Error('Not authenticated');
+            }
+
+            const headers = {
+                ...options.headers,
+                'Authorization': `Bearer ${authToken}`,
+                'Accept': 'application/json'
+            };
+
+            const response = await fetch(url, { 
+                ...options, 
+                headers,
+                credentials: 'include'
+            });
+            
+            if (response.status === 401) {
+                // Token expired or invalid
+                authToken = null;
+                currentUser = null;
+                localStorage.removeItem('authToken');
+                localStorage.removeItem('user');
+                showAuthContent();
+                throw new Error('Session expired. Please login again.');
+            }
+
+            return response;
+        }
+
+        // Update form submission to use auth
+        document.getElementById('uploadForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            if (!authToken) {
+                showError('Please login to upload images');
+                return;
+            }
+
+            const form = event.target;
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const btnText = submitBtn.querySelector('.btn-text');
+            const loader = submitBtn.querySelector('.loader');
+            const resultsSection = document.querySelector('.results-section');
+
+            // Validate both files before submission
+            const beforeFile = document.getElementById('before').files[0];
+            const afterFile = document.getElementById('after').files[0];
+
+            if (!beforeFile || !afterFile) {
+                showError('Please upload both before and after images');
+                return;
+            }
+
+            try {
+                // Validate both files
+                await Promise.all([
+                    validateFile(beforeFile),
+                    validateFile(afterFile)
+                ]);
+
+                // Show loading state
+                btnText.style.display = 'none';
+                loader.style.display = 'block';
+                submitBtn.disabled = true;
+
+            const formData = new FormData();
+                formData.append('before', beforeFile);
+                formData.append('after', afterFile);
+
+                const response = await fetchWithAuth('http://127.0.0.1:5000/process', {
+                method: 'POST',
+                body: formData
+            });
+
+                const data = await response.json();
+
+            if (!response.ok) {
+                    throw new Error(data.error || ERROR_MESSAGES[data.code] || 'Error processing images');
+                }
+
+                // Update results with animations
+                document.getElementById('score').textContent = `${data.cleanliness_score.toFixed(1)}%`;
+                document.getElementById('beforeVis').src = `data:image/png;base64,${data.before_visualization}`;
+                document.getElementById('afterVis').src = `data:image/png;base64,${data.after_visualization}`;
+
+                // Show results section with animation
+                resultsSection.style.display = 'block';
+                resultsSection.classList.add('animate-fade-in');
+
+                // Refresh history
+                loadHistory();
+
+            } catch (error) {
+                showError(error.message);
+            } finally {
+                // Reset button state
+                btnText.style.display = 'block';
+                loader.style.display = 'none';
+                submitBtn.disabled = false;
+            }
+        });
+
+        // Load history
+        async function loadHistory() {
+            try {
+                const response = await fetchWithAuth('http://127.0.0.1:5000/history');
+                if (!response.ok) throw new Error('Failed to load history');
+                
+                const history = await response.json();
+                const historyList = document.getElementById('historyList');
+                
+                historyList.innerHTML = history.map((result, index) => `
+                    <div class="history-item animate-fade-in" style="animation-delay: ${index * 0.1}s">
+                        <div class="history-score">${result.cleanliness_score.toFixed(1)}%</div>
+                        <div class="history-images">
+                            <img src="data:image/png;base64,${result.before_image}" alt="Before">
+                            <img src="data:image/png;base64,${result.after_image}" alt="After">
+                        </div>
+                        <div class="history-date">${new Date(result.timestamp).toLocaleString()}</div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading history:', error);
+            }
+        }
+
+        // Load history on page load
+        loadHistory();
+
+        // Educational content
+        const educationContent = {
+            germs: {
+                title: "Understanding Germs",
+                content: `
+                    <h3>Types of Germs</h3>
+                    <ul>
+                        <li><strong>Bacteria:</strong> Single-celled organisms that can live in various environments</li>
+                        <li><strong>Viruses:</strong> Tiny infectious agents that need a host to multiply</li>
+                        <li><strong>Fungi:</strong> Plant-like organisms that can cause infections</li>
+                        <li><strong>Protozoa:</strong> Single-celled organisms that can cause diseases</li>
+                    </ul>
+                    <h3>How Germs Spread</h3>
+                    <ul>
+                        <li>Through the air (coughing and sneezing)</li>
+                        <li>Direct contact with infected people</li>
+                        <li>Contaminated surfaces and objects</li>
+                        <li>Contaminated food and water</li>
+                    </ul>
+                `
+            },
+            washing: {
+                title: "Proper Hand Washing Technique",
+                content: `
+                    <h3>Step-by-Step Guide</h3>
+                    <ol>
+                        <li>Wet your hands with clean, running water</li>
+                        <li>Apply soap and lather well</li>
+                        <li>Rub hands together for at least 20 seconds</li>
+                        <li>Clean between fingers and under nails</li>
+                        <li>Rinse thoroughly under running water</li>
+                        <li>Dry hands with a clean towel or air dry</li>
+                    </ol>
+                    <h3>When to Wash Hands</h3>
+                    <ul>
+                        <li>Before and after preparing food</li>
+                        <li>Before eating</li>
+                        <li>After using the bathroom</li>
+                        <li>After coughing or sneezing</li>
+                        <li>After touching animals or garbage</li>
+                    </ul>
+                `
+            },
+            prevention: {
+                title: "Germ Prevention Tips",
+                content: `
+                    <h3>Daily Prevention Practices</h3>
+                    <ul>
+                        <li>Regular hand washing with soap and water</li>
+                        <li>Use alcohol-based hand sanitizer when soap isn't available</li>
+                        <li>Cover your mouth when coughing or sneezing</li>
+                        <li>Avoid touching your face, especially eyes, nose, and mouth</li>
+                        <li>Clean and disinfect frequently touched surfaces</li>
+                    </ul>
+                    <h3>Additional Tips</h3>
+                    <ul>
+                        <li>Get vaccinated against preventable diseases</li>
+                        <li>Stay home when you're sick</li>
+                        <li>Practice good respiratory hygiene</li>
+                        <li>Maintain a healthy lifestyle to boost immunity</li>
+                    </ul>
+                `
+            }
+        };
+
+        // Modal functionality
+        const modal = document.getElementById('educationModal');
+        const modalContent = document.getElementById('modalContent');
+        const closeModal = document.querySelector('.close-modal');
+
+        document.querySelectorAll('.learn-more-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const topic = button.getAttribute('data-topic');
+                const content = educationContent[topic];
+                modalContent.innerHTML = `
+                    <h2>${content.title}</h2>
+                    ${content.content}
+                `;
+                modal.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+            });
+        });
+
+        closeModal.addEventListener('click', () => {
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        });
+
+        window.addEventListener('click', (event) => {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        // Add these constants at the top of your script
+        const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+        const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/jpg'];
+        const MIN_DIMENSIONS = { width: 100, height: 100 };
+        const MAX_DIMENSIONS = { width: 4000, height: 4000 };
+
+        // Error messages mapping
+        const ERROR_MESSAGES = {
+            MISSING_FILES: "Please upload both before and after images",
+            VALIDATION_ERROR: "Invalid file format or size",
+            PROCESSING_ERROR: "Error processing image data",
+            CONTENT_ERROR: "Invalid image content",
+            ANALYSIS_ERROR: "Error analyzing images",
+            VISUALIZATION_ERROR: "Error creating visualization",
+            SCORE_ERROR: "Error calculating cleanliness score",
+            DATABASE_ERROR: "Error saving results",
+            UNKNOWN_ERROR: "An unexpected error occurred"
+        };
+
+        // Theme toggle functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const html = document.documentElement;
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        html.setAttribute('data-theme', savedTheme);
+
+        // Function to validate file
+        function validateFile(file) {
+            return new Promise((resolve, reject) => {
+                // Check file type
+                if (!ALLOWED_TYPES.includes(file.type)) {
+                    reject(`Invalid file type. Please upload PNG or JPG images`);
+                    return;
+                }
+
+                // Check file size
+                if (file.size > MAX_FILE_SIZE) {
+                    reject(`File size exceeds ${MAX_FILE_SIZE/1024/1024}MB limit`);
+                    return;
+                }
+
+                // Check image dimensions
+                const img = new Image();
+                img.onload = () => {
+                    if (img.width < MIN_DIMENSIONS.width || img.height < MIN_DIMENSIONS.height) {
+                        reject(`Image dimensions too small. Minimum size: ${MIN_DIMENSIONS.width}x${MIN_DIMENSIONS.height}`);
+                        return;
+                    }
+                    if (img.width > MAX_DIMENSIONS.width || img.height > MAX_DIMENSIONS.height) {
+                        reject(`Image dimensions too large. Maximum size: ${MAX_DIMENSIONS.width}x${MAX_DIMENSIONS.height}`);
+                        return;
+                    }
+                    resolve();
+                };
+                img.onerror = () => reject('Invalid image file');
+                img.src = URL.createObjectURL(file);
+            });
+        }
+
+        // Function to show error message
+        function showError(message) {
+            console.error('Error:', message); // Debug log
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'alert alert-error animate-fade-in';
+            errorDiv.innerHTML = `
+                <i class="fas fa-exclamation-circle"></i>
+                <span>${message}</span>
+                <button class="close-alert">&times;</button>
+            `;
+            
+            // Remove any existing alerts
+            const existingAlerts = document.querySelectorAll('.alert');
+            existingAlerts.forEach(alert => alert.remove());
+            
+            const container = document.querySelector('.auth-box') || document.querySelector('.container');
+            container.insertBefore(errorDiv, container.firstChild);
+            
+            // Add close button functionality
+            errorDiv.querySelector('.close-alert').addEventListener('click', () => {
+                errorDiv.remove();
+            });
+            
+            // Auto-remove after 5 seconds
+            setTimeout(() => {
+                if (errorDiv.parentNode) {
+                    errorDiv.remove();
+                }
+            }, 5000);
+        }
+
+        // Update file preview functionality
+        function setupFilePreview(inputId, previewId) {
+            const input = document.getElementById(inputId);
+            const preview = document.getElementById(previewId);
+
+            input.addEventListener('change', async function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    try {
+                        await validateFile(file);
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            preview.innerHTML = `<img src="${e.target.result}" alt="Preview" class="animate-fade-in">`;
+                        }
+                        reader.readAsDataURL(file);
+                    } catch (error) {
+                        showError(error);
+                        input.value = '';
+                        preview.innerHTML = '';
+                    }
+                }
+            });
+        }
+
+        setupFilePreview('before', 'beforePreview');
+        setupFilePreview('after', 'afterPreview');
+
+        // Function to show success message
+        function showSuccess(message) {
+            const successDiv = document.createElement('div');
+            successDiv.className = 'alert alert-success animate-fade-in';
+            successDiv.innerHTML = `
+                <i class="fas fa-check-circle"></i>
+                <span>${message}</span>
+                <button class="close-alert">&times;</button>
+            `;
+            
+            const container = document.querySelector('.auth-box') || document.querySelector('.container');
+            container.insertBefore(successDiv, container.firstChild);
+            
+            successDiv.querySelector('.close-alert').addEventListener('click', () => {
+                successDiv.remove();
+            });
+            
+            setTimeout(() => {
+                if (successDiv.parentNode) {
+                    successDiv.remove();
+                }
+            }, 5000);
+        }
+
+        // Check session on page load
+        checkSession();
+    </script>
+</body>
+</html>
