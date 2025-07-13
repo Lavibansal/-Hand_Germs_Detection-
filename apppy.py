@@ -122,6 +122,15 @@ def token_required(f):
         return f(current_user, *args, **kwargs)
     return decorated
 
+# Static file routes
+@app.route('/')
+def index():
+    return send_from_directory('.', 'index1.html')
+
+@app.route('/<path:filename>')
+def static_files(filename):
+    return send_from_directory('.', filename)
+
 # Authentication routes
 @app.route('/register', methods=['POST'])
 def register():
